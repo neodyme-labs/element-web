@@ -28,6 +28,7 @@ import {
 import { Key } from "../../../Keyboard";
 import { clamp } from "../../../utils/numbers";
 import { type ButtonEvent } from "../elements/AccessibleButton";
+import { custom_emoji_categories, custom_emojis } from "./Custom";
 
 export const CATEGORY_HEADER_HEIGHT = 20;
 export const EMOJI_HEIGHT = 35;
@@ -69,10 +70,23 @@ class EmojiPicker extends React.Component<IProps, IState> {
         };
 
         // Convert recent emoji characters to emoji data, removing unknowns and duplicates
-        this.recentlyUsed = Array.from(new Set(filterBoolean(recent.get().map(getEmojiFromUnicode))));
+        this.recentlyUsed = Array.from(
+            new Set(
+                filterBoolean(
+                    recent.get().map(
+                        (unicode) =>
+                            getEmojiFromUnicode(unicode) ??
+                            Object.values(custom_emojis)
+                                .flat(1)
+                                .find((e) => e.unicode == unicode),
+                    ),
+                ),
+            ),
+        );
         this.memoizedDataByCategory = {
             recent: this.recentlyUsed,
             ...DATA_BY_CATEGORY,
+            ...custom_emojis,
         };
 
         this.categories = [
@@ -139,7 +153,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
                 visible: false,
                 ref: React.createRef(),
             },
-        ];
+        ].concat(custom_emoji_categories);
     }
 
     private onScroll = (): void => {
@@ -254,7 +268,7 @@ class EmojiPicker extends React.Component<IProps, IState> {
             if (lcFilter.includes(this.state.filter)) {
                 emojis = this.memoizedDataByCategory[cat.id];
             } else {
-                emojis = cat.id === "recent" ? this.recentlyUsed : DATA_BY_CATEGORY[cat.id];
+                emojis = cat.id === "recent" ? this.recentlyUsed : (DATA_BY_CATEGORY[cat.id] ?? custom_emojis[cat.id]);
             }
 
             if (lcFilter !== "") {

@@ -25,6 +25,12 @@ export function EmojiButton({ addEmoji, menuPosition, className }: IEmojiButtonP
     const overflowMenuCloser = useContext(OverflowMenuContext);
     const [menuDisplayed, button, openMenu, closeMenu] = useContextMenu();
 
+    const addCustomEmoji = (unicode: string): boolean => {
+        {
+            return unicode.startsWith("mxc://") ? addEmoji("") : addEmoji(unicode);
+        }
+    };
+
     let contextMenu: React.ReactElement | null = null;
     if (menuDisplayed && button.current) {
         const position = menuPosition ?? aboveLeftOf(button.current.getBoundingClientRect());
@@ -35,7 +41,7 @@ export function EmojiButton({ addEmoji, menuPosition, className }: IEmojiButtonP
 
         contextMenu = (
             <ContextMenu {...position} onFinished={onFinished} managed={false}>
-                <EmojiPicker onChoose={addEmoji} onFinished={onFinished} />
+                <EmojiPicker onChoose={addCustomEmoji} onFinished={onFinished} />
             </ContextMenu>
         );
     }

@@ -9,6 +9,7 @@ Please see LICENSE files in the repository root for full details.
 
 import React from "react";
 import { type Emoji } from "@matrix-org/emojibase-bindings";
+import { mediaFromMxc } from "../../../customisations/Media";
 
 interface IProps {
     emoji: Emoji;
@@ -24,7 +25,16 @@ class Preview extends React.PureComponent<IProps> {
 
         return (
             <div className="mx_EmojiPicker_footer mx_EmojiPicker_preview">
-                <div className="mx_EmojiPicker_preview_emoji">{unicode}</div>
+                <div className="mx_EmojiPicker_preview_emoji">
+                    {unicode.startsWith("mxc://") ? (
+                        <img
+                            style={{ aspectRatio: "auto", maxWidth: "1em", maxHeight: "1em" }}
+                            src={mediaFromMxc(unicode).srcHttp ?? ""}
+                        />
+                    ) : (
+                        unicode
+                    )}
+                </div>
                 <div className="mx_EmojiPicker_preview_text">
                     <div className="mx_EmojiPicker_name mx_EmojiPicker_preview_name">{label}</div>
                     <div className="mx_EmojiPicker_shortcode">{shortcode}</div>

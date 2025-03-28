@@ -91,7 +91,7 @@ class Header extends React.PureComponent<IProps> {
                 onKeyDown={this.onKeyDown}
             >
                 {this.props.categories.map((category) => {
-                    const classes = classNames(`mx_EmojiPicker_anchor mx_EmojiPicker_anchor_${category.id}`, {
+                    const classes = classNames(`mx_EmojiPicker_anchor mx_EmojiPicker_anchor_${category.id} mx_EmojiPicker_anchor_custom`, {
                         mx_EmojiPicker_anchor_visible: category.visible,
                     });
                     // Properties of this button are also modified by EmojiPicker's updateVisibility in DOM.
